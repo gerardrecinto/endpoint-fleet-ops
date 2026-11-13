@@ -1,0 +1,31 @@
+{
+  "platform": "all",
+  "queries": {
+    "macos_filevault_off": {
+      "query": "SELECT 'filevault_off' AS finding FROM disk_encryption WHERE encrypted = 0 AND name IN (SELECT device FROM mounts WHERE path = '/System/Volumes/Data');",
+      "platform": "darwin",
+      "interval": 3600,
+      "description": "FileVault is off on the data volume."
+    },
+    "macos_gatekeeper_off": {
+      "query": "SELECT 'gatekeeper_off' AS finding FROM gatekeeper WHERE assessments_enabled = 0;",
+      "platform": "darwin",
+      "interval": 3600
+    },
+    "macos_firewall_off": {
+      "query": "SELECT 'firewall_off' AS finding FROM alf WHERE global_state = 0;",
+      "platform": "darwin",
+      "interval": 3600
+    },
+    "windows_firewall_or_av_off": {
+      "query": "SELECT 'security_center_' || CASE WHEN firewall != 'Good' THEN 'firewall' ELSE 'antivirus' END || '_not_good' AS finding FROM windows_security_center WHERE firewall != 'Good' OR antivirus != 'Good';",
+      "platform": "windows",
+      "interval": 3600
+    },
+    "old_os": {
+      "query": "SELECT name, version FROM os_version WHERE (platform = 'darwin' AND major < 14) OR (platform = 'windows' AND CAST(build AS INTEGER) < 19045);",
+      "interval": 86400,
+      "description": "macOS older than 14 or Windows older than 10 22H2."
+    }
+  }
+}

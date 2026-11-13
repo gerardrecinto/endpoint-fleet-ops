@@ -1,0 +1,16 @@
+# Fleet policies pass when the query returns a row.
+- name: FileVault is on (macOS)
+  platform: darwin
+  query: SELECT 1 FROM disk_encryption WHERE encrypted = 1 AND name IN (SELECT device FROM mounts WHERE path = '/System/Volumes/Data');
+  description: The data volume is encrypted.
+  resolution: Turn on FileVault in System Settings, or push the FileVault profile from MDM.
+- name: Gatekeeper is on (macOS)
+  platform: darwin
+  query: SELECT 1 FROM gatekeeper WHERE assessments_enabled = 1;
+  description: Gatekeeper assessments are enabled.
+  resolution: Run sudo spctl --master-enable.
+- name: Firewall and antivirus are good (Windows)
+  platform: windows
+  query: SELECT 1 FROM windows_security_center WHERE firewall = 'Good' AND antivirus = 'Good';
+  description: Windows Security Center reports both as good.
+  resolution: Re-enable Defender and the firewall, or check for a conflicting security product.
