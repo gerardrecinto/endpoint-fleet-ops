@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://gerardrecinto.github.io/endpoint-fleet-ops/sitemap.xml
